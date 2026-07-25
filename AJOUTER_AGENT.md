@@ -21,34 +21,25 @@ agents:
 ## 2. Créer le dossier de l'agent
 
 ```bash
-mkdir -p /opt/data/argentic-os/agents/designer
+mkdir -p agents/designer
 ```
 
 ## 3. (Optionnel) Ajouter un prompt spécifique
 
 ```bash
-echo "Ton rôle détaillé..." > /opt/data/argentic-os/agents/designer/prompt.md
+echo "Ton rôle détaillé..." > agents/designer/prompt.md
 ```
 
 ## 4. Tester
 
 ```bash
-cd /opt/data/argentic-os
 python3 orchestre.py --agent designer "Crée une page d'accueil minimaliste"
-```
-
-## 5. (Optionnel) Ajouter la détection vocale
-
-Dans `jarvis-interface.html`, ajouter le nom de l'agent dans `detectArgenticAgent()` :
-
-```javascript
-const agentNames = ['manager', 'dev', 'recherche', 'devops', 'designer', ...];
 ```
 
 ## Architecture
 
 ```
-/opt/data/argentic-os/
+.
 ├── agents.yaml          ← Registre des agents (ajouter ici)
 ├── orchestre.py         ← Orchestrateur
 ├── agents/
@@ -61,7 +52,7 @@ const agentNames = ['manager', 'dev', 'recherche', 'devops', 'designer', ...];
 └── logs/                ← Logs
 ```
 
-## Commandes vocales supportées
+## Exemples de commandes
 
 - "Demande à dev de créer un script Python"
 - "Le manager doit analyser ce projet"

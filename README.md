@@ -47,10 +47,22 @@ agents:
 
 2. Tester : `python3 orchestre.py --agent designer "Crée une landing page"`
 
-## 🎤 Intégration JARVIS
+## 🔌 Intégration API
 
-Compatible avec l'interface vocale JARVIS :
+L'orchestrateur peut être appelé depuis n'importe quelle interface via une API REST :
 
+```python
+# Exemple : wrapper Flask/FastAPI
+@app.post("/agent")
+def call_agent(agent: str, task: str):
+    result = subprocess.run(
+        ["python3", "orchestre.py", "--agent", agent, task],
+        capture_output=True, text=True
+    )
+    return {"response": result.stdout}
+```
+
+Exemples de commandes :
 - « Demande à dev de créer un script »
 - « Le manager doit analyser ce projet »
 - « Dis à recherche quelle est la capitale du Togo »
@@ -58,7 +70,7 @@ Compatible avec l'interface vocale JARVIS :
 ## 🏗️ Architecture
 
 ```
-/opt/data/argentic-os/
+.
 ├── agents.yaml          ← Registre des agents
 ├── orchestre.py         ← Orchestrateur
 ├── agents/              ← Dossiers par agent
