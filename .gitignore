@@ -1,0 +1,11 @@
+# Argentic OS
+__pycache__/
+*.pyc
+.DS_Store
+.env
+*.log
+logs/
+bus/messages/*
+!bus/messages/.gitkeep
+projects/*
+!projects/.gitkeep
