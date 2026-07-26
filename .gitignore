@@ -1,11 +1,9 @@
-# Argentic OS
 __pycache__/
+mfa_sessions.json
+users.json
+model_overrides.json
+.venv*/
 *.pyc
-.DS_Store
-.env
-*.log
-logs/
-bus/messages/*
-!bus/messages/.gitkeep
-projects/*
-!projects/.gitkeep
+node_modules/
+.next/
+out/
