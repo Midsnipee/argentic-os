@@ -25,11 +25,15 @@ import bcrypt
 import jwt
 import pyotp
 import yaml
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
+
+# ── Load .env ─────────────────────────────────────────────────────
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
 # ── Config ──────────────────────────────────────────────────────────
 ARGENTIC_HOME = os.environ.get("ARGENTIC_HOME", "/opt/data/argentic-os")

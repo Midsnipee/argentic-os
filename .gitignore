@@ -7,3 +7,5 @@ model_overrides.json
 node_modules/
 .next/
 out/
+.env
+.env.production
