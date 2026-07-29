@@ -34,6 +34,8 @@ export const api = {
 
   agents: () => request("/api/agents"),
 
+  agent: (id: string) => request(`/api/agents/${id}`),
+
   models: () => request("/api/models"),
 
   updateAgentModel: (agentId: string, model: string) =>

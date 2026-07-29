@@ -365,6 +365,24 @@ async def list_agents(user: dict = Depends(_get_current_user)):
         ]
     }
 
+@app.get("/api/agents/{agent_id}")
+async def get_agent(agent_id: str, user: dict = Depends(_get_current_user)):
+    """Détails complets d'un agent."""
+    agents = _load_agents()
+    if agent_id not in agents:
+        raise HTTPException(status_code=404, detail=f"Agent '{agent_id}' inconnu")
+    a = agents[agent_id]
+    return {
+        "id": agent_id,
+        "name": a["name"],
+        "icon": a.get("icon", "🤖"),
+        "model": a.get("model", "default"),
+        "role": a.get("role", ""),
+        "max_turns": a.get("max_turns", 10),
+        "tools": a.get("tools", []),
+        "workdir": a.get("workdir", ""),
+    }
+
 @app.patch("/api/agents/{agent_id}/model")
 async def update_agent_model(agent_id: str, req: ModelUpdateRequest, user: dict = Depends(_get_current_user)):
     """Change le modèle d'un agent."""
