@@ -18,7 +18,7 @@ agents:
       Tu ne fais pas le travail toi-même — tu supervises. Tu donnes des
       directives claires au Manager, qui coordonne les agents opérationnels.
       Tu réponds en français, de façon concise et autoritaire.
-    model: "deepseek/deepseek-v4-pro"
+    model: "openai/gpt-4o-mini"
     max_turns: 15
     tools: [terminal, file]
     icon: "👑"
