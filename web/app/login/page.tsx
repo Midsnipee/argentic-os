@@ -37,65 +37,89 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-sm animate-fade-in">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold" style={{ color: "var(--primary)" }}>
+    <div style={{
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "var(--bg)",
+      padding: 24,
+    }}>
+      <div style={{
+        background: "var(--surface)",
+        border: "1px solid var(--border)",
+        borderRadius: 16,
+        padding: 40,
+        width: "100%",
+        maxWidth: 400,
+        boxShadow: "0 4px 24px rgba(0,0,0,0.04)",
+      }}>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <div style={{ fontSize: "2.5rem", marginBottom: 8 }}>👑</div>
+          <h1 style={{ fontSize: "1.4rem", fontWeight: 700, margin: 0, color: "var(--text)" }}>
             Argentic OS
           </h1>
-          <p className="mt-2" style={{ color: "var(--text-dim)" }}>
-            Connexion sécurisée
+          <p style={{ fontSize: "0.85rem", color: "var(--text-dim)", marginTop: 4 }}>
+            Connectez-vous pour accéder à vos agents
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm mb-1" style={{ color: "var(--text-dim)" }}>
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 500, marginBottom: 6, color: "var(--text)" }}>
               Email
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="vous@example.com"
               required
               autoFocus
-              className="w-full px-4 py-3 rounded-lg border text-base transition-colors outline-none"
               style={{
-                background: "var(--surface)",
-                borderColor: "var(--border)",
+                width: "100%",
+                padding: "12px 14px",
+                borderRadius: "var(--radius)",
+                border: "1px solid var(--border)",
+                fontSize: "0.9rem",
+                background: "var(--bg)",
                 color: "var(--text)",
               }}
-              placeholder="vous@exemple.com"
-              onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
-              onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
             />
           </div>
-          <div>
-            <label className="block text-sm mb-1" style={{ color: "var(--text-dim)" }}>
+
+          <div style={{ marginBottom: 8 }}>
+            <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 500, marginBottom: 6, color: "var(--text)" }}>
               Mot de passe
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
               required
-              className="w-full px-4 py-3 rounded-lg border text-base transition-colors outline-none"
               style={{
-                background: "var(--surface)",
-                borderColor: "var(--border)",
+                width: "100%",
+                padding: "12px 14px",
+                borderRadius: "var(--radius)",
+                border: "1px solid var(--border)",
+                fontSize: "0.9rem",
+                background: "var(--bg)",
                 color: "var(--text)",
               }}
-              placeholder="••••••••"
-              onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
-              onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
             />
           </div>
 
           {error && (
-            <div
-              className="text-sm p-3 rounded-lg"
-              style={{ background: "rgba(255,23,68,0.1)", color: "var(--danger)" }}
-            >
+            <div style={{
+              background: "#fef2f2",
+              color: "var(--danger)",
+              padding: "10px 14px",
+              borderRadius: "var(--radius)",
+              fontSize: "0.8rem",
+              marginBottom: 16,
+              border: "1px solid #fecaca",
+            }}>
               {error}
             </div>
           )}
@@ -103,12 +127,8 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-lg font-semibold text-base transition-all"
-            style={{
-              background: loading ? "var(--primary-dim)" : "var(--primary)",
-              color: "#050510",
-              opacity: loading ? 0.7 : 1,
-            }}
+            className="btn btn-primary"
+            style={{ width: "100%", padding: "13px", justifyContent: "center", fontSize: "0.9rem", marginTop: 8 }}
           >
             {loading ? "Connexion..." : "Se connecter"}
           </button>
