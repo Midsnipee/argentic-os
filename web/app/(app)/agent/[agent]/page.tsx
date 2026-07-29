@@ -111,6 +111,9 @@ export default function AgentChatPage() {
     abortRef.current = controller;
     setLoading(true);
 
+    // Timeout après 120s (au cas où)
+    const timeout = setTimeout(() => controller.abort(), 120000);
+
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:9151";
       const t = localStorage.getItem("argentic_token");
@@ -133,6 +136,7 @@ export default function AgentChatPage() {
         setMessages((prev) => [...prev, { role: "agent", text: "⚠ Erreur réseau" }]);
       }
     } finally {
+      clearTimeout(timeout);
       setLoading(false);
       abortRef.current = null;
     }
