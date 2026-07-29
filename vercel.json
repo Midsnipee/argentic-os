@@ -1,5 +1,5 @@
 {
-  "framework": null,
+  "framework": "nextjs",
   "installCommand": "cd web && npm install",
   "buildCommand": "cd web && npx next build",
   "outputDirectory": "web/.next"
