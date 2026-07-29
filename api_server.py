@@ -8,6 +8,7 @@ Usage:
   python3 api_server.py --ssl        # HTTPS (production)
 """
 
+import asyncio
 import hashlib
 import json
 import os
@@ -414,9 +415,9 @@ async def reset_agent_model(agent_id: str, user: dict = Depends(_get_current_use
 # ── Chat ────────────────────────────────────────────────────────────
 @app.post("/api/chat")
 async def chat(req: ChatRequest, user: dict = Depends(_get_current_user)):
-    """Envoie un message à un agent spécifique."""
+    """Envoie un message à un agent spécifique (non-bloquant)."""
     try:
-        result = _run_agent(req.agent, req.message)
+        result = await asyncio.to_thread(_run_agent, req.agent, req.message)
         return result
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -463,4 +464,4 @@ if __name__ == "__main__":
 
     print(f"🔐 JWT_SECRET = {JWT_SECRET[:8]}...", file=sys.stderr, flush=True)
     print(f"👑 Argentic OS API → port {args.port}", file=sys.stderr, flush=True)
-    uvicorn.run(app, host="0.0.0.0", port=args.port, **ssl_kwargs)
+    uvicorn.run("api_server:app", host="0.0.0.0", port=args.port, workers=4, **ssl_kwargs)
