@@ -1,0 +1,48 @@
+:root {
+  --bg: black;
+  --primary: gold;
+  --text: white;
+}
+
+body {
+  background: var(--bg);
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text);
+  margin: 0;
+}
+
+header {
+  background: var(--primary);
+  padding: 1rem;
+}
+
+.nav-links {
+  display: flex;
+  list-style-type: none;
+}
+
+.nav-links li {
+  margin: 0 15px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.service-card {
+  background: var(--text);
+  border: 2px solid var(--primary);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+
+.service-card:hover {
+  transform: scale(1.05);
+}
+
+.map {
+  width: 100%;
+  height: 400px;
+}
