@@ -53,4 +53,19 @@ export const api = {
   me: () => request("/api/me"),
 
   health: () => request("/api/health"),
+
+  projects: {
+    list: () => request("/api/projects"),
+    get: (name: string) => request(`/api/projects/${name}`),
+    create: (name: string, description?: string, isPrivate?: boolean) =>
+      request("/api/projects/create", {
+        method: "POST",
+        body: JSON.stringify({ name, description: description || "", private: isPrivate || false }),
+      }),
+    push: (name: string, message?: string) =>
+      request(`/api/projects/${name}/push`, {
+        method: "POST",
+        body: JSON.stringify({ message: message || "🔄 Update from Argentic-OS" }),
+      }),
+  },
 };

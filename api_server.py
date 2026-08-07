@@ -36,6 +36,10 @@ from pydantic import BaseModel
 # ── Load .env ─────────────────────────────────────────────────────
 load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
+# ── GitHub Auto-Repo ──────────────────────────────────────────────
+sys.path.insert(0, ARGENTIC_HOME := os.environ.get("ARGENTIC_HOME", "/opt/data/argentic-os"))
+from github_auto import create_project, push_project, status_project, GITHUB_TOKEN, GITHUB_USER
+
 # ── Config ──────────────────────────────────────────────────────────
 ARGENTIC_HOME = os.environ.get("ARGENTIC_HOME", "/opt/data/argentic-os")
 HERMES_BIN = "/opt/hermes/bin/hermes"
@@ -117,6 +121,14 @@ class SetupRequest(BaseModel):
 
 class ModelUpdateRequest(BaseModel):
     model: str
+
+class CreateProjectRequest(BaseModel):
+    name: str
+    description: str = ""
+    private: bool = False
+
+class PushProjectRequest(BaseModel):
+    message: str = "🔄 Update from Argentic-OS"
 
 # ── User Management ─────────────────────────────────────────────────
 def _load_users() -> dict:
@@ -442,6 +454,50 @@ async def serve_frontend():
     if os.path.exists(index_path):
         return FileResponse(index_path)
     return HTMLResponse("<h1>Argentic OS API</h1><p>Frontend non déployé. Utilisez <code>/api/*</code></p>")
+
+# ── Projects (GitHub Auto-Repo) ────────────────────────────────────
+@app.post("/api/projects/create")
+async def api_create_project(req: CreateProjectRequest, user: dict = Depends(_get_current_user)):
+    """Crée un projet local + repo GitHub + push initial."""
+    if not GITHUB_TOKEN:
+        raise HTTPException(status_code=500, detail="GITHUB_TOKEN non configuré dans .env")
+    result = create_project(req.name, req.description, req.private)
+    if not result["success"]:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
+
+@app.get("/api/projects")
+async def api_list_projects(user: dict = Depends(_get_current_user)):
+    """Liste tous les projets."""
+    import glob
+    projects = []
+    for d in sorted(glob.glob(os.path.join(ARGENTIC_HOME, "projects", "*/"))):
+        name = os.path.basename(d.rstrip("/"))
+        has_git = os.path.exists(os.path.join(d, ".git"))
+        projects.append({
+            "name": name,
+            "path": d,
+            "has_git": has_git,
+            "repo_url": f"https://github.com/{GITHUB_USER}/{name}" if has_git else None,
+        })
+    return {"projects": projects}
+
+@app.get("/api/projects/{name}")
+async def api_get_project(name: str, user: dict = Depends(_get_current_user)):
+    """Détails d'un projet."""
+    result = status_project(name)
+    if not result["success"]:
+        raise HTTPException(status_code=404, detail=result["error"])
+    return result
+
+@app.post("/api/projects/{name}/push")
+async def api_push_project(name: str, user: dict = Depends(_get_current_user), req: PushProjectRequest | None = None):
+    """Push les changements d'un projet vers GitHub."""
+    msg = req.message if req else "🔄 Update from Argentic-OS"
+    result = push_project(name, msg)
+    if not result["success"]:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
 
 # ══════════════════════════════════════════════════════════════════════
 # MAIN

@@ -102,13 +102,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <nav style={{ padding: "8px", flex: 1, overflowY: "auto" }}>
           <Link href="/dashboard"
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "10px 12px",
-              borderRadius: "var(--radius)",
-              textDecoration: "none",
-              fontSize: "0.875rem",
+              display: "flex", alignItems: "center", gap: 10,
+              padding: "10px 12px", borderRadius: "var(--radius)",
+              textDecoration: "none", fontSize: "0.875rem",
               fontWeight: isDashboard ? 600 : 400,
               color: isDashboard ? "var(--primary)" : "var(--text-dim)",
               background: isDashboard ? "var(--primary-light)" : "transparent",
@@ -117,6 +113,21 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           >
             <span>📊</span>
             {!collapsed && "Dashboard"}
+          </Link>
+
+          <Link href="/projects"
+            style={{
+              display: "flex", alignItems: "center", gap: 10,
+              padding: "10px 12px", borderRadius: "var(--radius)",
+              textDecoration: "none", fontSize: "0.875rem",
+              fontWeight: pathname === "/projects" ? 600 : 400,
+              color: pathname === "/projects" ? "var(--primary)" : "var(--text-dim)",
+              background: pathname === "/projects" ? "var(--primary-light)" : "transparent",
+              marginBottom: 4,
+            }}
+          >
+            <span>📁</span>
+            {!collapsed && "Projets"}
           </Link>
 
           {!collapsed && (
