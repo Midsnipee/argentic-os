@@ -68,4 +68,7 @@ export const api = {
         body: JSON.stringify({ message: message || "🔄 Update from Argentic-OS" }),
       }),
   },
+
+  mfaSetup: () => request("/api/me/mfa-setup"),
+  mfaReset: () => request("/api/me/mfa-reset", { method: "POST" }),
 };

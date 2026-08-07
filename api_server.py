@@ -16,6 +16,7 @@ import secrets
 import subprocess
 import sys
 import time
+import urllib.parse
 import uuid
 from datetime import datetime, timedelta
 from functools import wraps
@@ -172,6 +173,7 @@ async def _get_current_user(
         user = users.get(payload["sub"])
         if not user:
             raise HTTPException(status_code=401, detail="Utilisateur introuvable")
+        user["id"] = payload["sub"]
         return user
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expiré")
