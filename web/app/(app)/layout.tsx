@@ -130,6 +130,21 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             {!collapsed && "Projets"}
           </Link>
 
+          <Link href="/mfa-setup"
+            style={{
+              display: "flex", alignItems: "center", gap: 10,
+              padding: "10px 12px", borderRadius: "var(--radius)",
+              textDecoration: "none", fontSize: "0.875rem",
+              fontWeight: pathname === "/mfa-setup" ? 600 : 400,
+              color: pathname === "/mfa-setup" ? "var(--primary)" : "var(--text-dim)",
+              background: pathname === "/mfa-setup" ? "var(--primary-light)" : "transparent",
+              marginBottom: 4,
+            }}
+          >
+            <span>🔐</span>
+            {!collapsed && "MFA"}
+          </Link>
+
           {!collapsed && (
             <div style={{
               fontSize: "0.7rem",

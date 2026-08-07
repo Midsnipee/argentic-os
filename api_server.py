@@ -442,6 +442,77 @@ async def me(user: dict = Depends(_get_current_user)):
     """Infos sur l'utilisateur connecté."""
     return {"email": user["email"], "role": user["role"]}
 
+# ── MFA Setup / Reset ───────────────────────────────────────────────
+import base64
+import io
+
+try:
+    import qrcode
+    from qrcode.image.pil import PilImage
+    HAS_QRCODE = True
+except ImportError:
+    HAS_QRCODE = False
+
+def _generate_qr_data_url(data: str) -> str:
+    """Génère un QR code en data URL PNG."""
+    if HAS_QRCODE:
+        qr = qrcode.QRCode(version=1, box_size=10, border=4)
+        qr.add_data(data)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+        buf = io.BytesIO()
+        img.save(buf, format="PNG")
+        return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
+    else:
+        # Fallback: Google Charts API
+        encoded = urllib.parse.quote(data, safe="")
+        return f"https://chart.googleapis.com/chart?cht=qr&chs=250x250&chl={encoded}"
+
+@app.get("/api/me/mfa-setup")
+async def mfa_setup(user: dict = Depends(_get_current_user)):
+    """Retourne la config MFA actuelle + QR code."""
+    users = _load_users()
+    uid = user["id"]
+    if uid not in users:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+
+    secret = users[uid].get("mfa_secret", "")
+    if not secret:
+        raise HTTPException(status_code=400, detail="MFA non configuré")
+
+    totp = pyotp.TOTP(secret)
+    uri = totp.provisioning_uri(name=user["email"], issuer_name="ArgenticOS")
+    qr_url = _generate_qr_data_url(uri)
+
+    return {
+        "mfa_secret": secret,
+        "mfa_uri": uri,
+        "qr_url": qr_url,
+    }
+
+@app.post("/api/me/mfa-reset")
+async def mfa_reset(user: dict = Depends(_get_current_user)):
+    """Régénère le secret MFA."""
+    users = _load_users()
+    uid = user["id"]
+    if uid not in users:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+
+    new_secret = pyotp.random_base32()
+    users[uid]["mfa_secret"] = new_secret
+    _save_users(users)
+
+    totp = pyotp.TOTP(new_secret)
+    uri = totp.provisioning_uri(name=user["email"], issuer_name="ArgenticOS")
+    qr_url = _generate_qr_data_url(uri)
+
+    return {
+        "success": True,
+        "mfa_secret": new_secret,
+        "mfa_uri": uri,
+        "qr_url": qr_url,
+    }
+
 # ── Health ──────────────────────────────────────────────────────────
 @app.get("/api/health")
 async def health():
