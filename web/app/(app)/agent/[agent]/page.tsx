@@ -49,8 +49,18 @@ export default function AgentChatPage() {
   const [loading, setLoading] = useState(false);
   const [taskInput, setTaskInput] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [mobileTab, setMobileTab] = useState<"dashboard" | "chat">("chat");
+  const [isMobile, setIsMobile] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  // Detect mobile
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Load persisted messages
   useEffect(() => {
@@ -188,13 +198,45 @@ export default function AgentChatPage() {
   const doneTasks = tasks.filter((t) => t.status === "done").length;
 
   return (
-    <div style={{ display: "flex", height: "100%", overflow: "hidden" }}>
+    <div style={{ display: "flex", height: "100%", overflow: "hidden", flexDirection: isMobile ? "column" : "row" }}>
+      {/* ── Mobile tab bar ── */}
+      {isMobile && (
+        <div style={{
+          display: "flex", borderBottom: "1px solid var(--border)",
+          background: "var(--surface)", flexShrink: 0,
+        }}>
+          <button onClick={() => setMobileTab("dashboard")}
+            style={{
+              flex: 1, padding: "10px", border: "none", cursor: "pointer",
+              background: mobileTab === "dashboard" ? "var(--primary-light)" : "transparent",
+              color: mobileTab === "dashboard" ? "var(--primary)" : "var(--text-dim)",
+              fontWeight: mobileTab === "dashboard" ? 600 : 400,
+              fontSize: "0.8rem", borderBottom: mobileTab === "dashboard" ? "2px solid var(--primary)" : "2px solid transparent",
+            }}>
+            📋 Dashboard
+          </button>
+          <button onClick={() => setMobileTab("chat")}
+            style={{
+              flex: 1, padding: "10px", border: "none", cursor: "pointer",
+              background: mobileTab === "chat" ? "var(--primary-light)" : "transparent",
+              color: mobileTab === "chat" ? "var(--primary)" : "var(--text-dim)",
+              fontWeight: mobileTab === "chat" ? 600 : 400,
+              fontSize: "0.8rem", borderBottom: mobileTab === "chat" ? "2px solid var(--primary)" : "2px solid transparent",
+            }}>
+            💬 Chat
+          </button>
+        </div>
+      )}
+
       {/* Dashboard Panel */}
-      <div style={{
-        width: 340, borderRight: "1px solid var(--border)",
-        background: "var(--surface)", overflowY: "auto", flexShrink: 0,
-        display: "flex", flexDirection: "column",
-      }}>
+      {(isMobile ? mobileTab === "dashboard" : true) && (
+        <div style={{
+          width: isMobile ? "100%" : 340, borderRight: isMobile ? "none" : "1px solid var(--border)",
+          borderBottom: isMobile ? "1px solid var(--border)" : "none",
+          background: "var(--surface)", overflowY: "auto", flexShrink: 0,
+          display: "flex", flexDirection: "column",
+          flex: isMobile ? 1 : undefined, maxHeight: isMobile ? "none" : undefined,
+        }}>
         <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10 }}>
           <span style={{ fontSize: "1.8rem" }}>{agent.icon}</span>
           <div style={{ flex: 1 }}>
@@ -308,9 +350,10 @@ export default function AgentChatPage() {
             </div>
           )}
         </div>
-      </div>
+      </div>)}
 
       {/* Chat Panel */}
+      {(isMobile ? mobileTab === "chat" : true) && (
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
         <div style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
           {messages.length === 0 ? (
@@ -365,7 +408,7 @@ export default function AgentChatPage() {
             </button>
           </div>
         </form>
-      </div>
+      </div>)}
     </div>
   );
 }

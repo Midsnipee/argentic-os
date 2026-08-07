@@ -102,3 +102,10 @@ input:focus, textarea:focus, select:focus {
   color: var(--text-dim);
 }
 .btn-ghost:hover { background: var(--hover); color: var(--text); }
+
+/* ── Mobile ── */
+@media (max-width: 767px) {
+  .msg-user { max-width: 90% !important; }
+  .msg-agent { max-width: 95% !important; }
+  input, textarea, select { font-size: 16px !important; }  /* prevent iOS zoom */
+}

@@ -61,8 +61,8 @@ export default function ProjectsPage() {
   };
 
   return (
-    <div style={{ padding: "32px 40px", overflowY: "auto", height: "100%" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28 }}>
+    <div style={{ padding: "24px 16px", overflowY: "auto", height: "100%" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28, flexWrap: "wrap", gap: 8 }}>
         <div>
           <h1 style={{ fontSize: "1.5rem", fontWeight: 700, margin: 0, color: "var(--text)" }}>
             📁 Projets
@@ -149,7 +149,7 @@ export default function ProjectsPage() {
       ) : (
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
           gap: 16,
         }}>
           {projects.map((p) => (
